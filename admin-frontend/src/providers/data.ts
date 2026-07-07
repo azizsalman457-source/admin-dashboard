@@ -1,39 +1,39 @@
-import { createSimpleRestDataProvider } from "@refinedev/rest/simple-rest";
-import { API_URL } from "./constants";
-import { DataProvider, BaseRecord, GetListParams, GetListResponse } from "@refinedev/core";
-import { mockSubjects } from "@/Constants/subjects";
+import{createDataProvider,CreateDataProviderOptions} from "@refinedev/rest";
+import { BACKEND_BASE_URL } from "@/Constants";
+import { ListResponse } from "@/types";
+const options:CreateDataProviderOptions={
+  getList:{
+    getEndpoint:({resource})=>resource,
+    buildQueryParams:async({resource,pagination,filters})=>{
+      const page=pagination?.currentPage??1;
+      const pageSize=pagination?.pageSize??10;
 
-export const { dataProvider: baseDataProvider, kyInstance } = createSimpleRestDataProvider({
-  apiURL: API_URL,
-});
+      const params:Record<string,string|number>={page,limit:pageSize};
 
-export const dataProvider: DataProvider = {
-  getList: async<TData extends BaseRecord = BaseRecord>({ resource }: GetListParams): Promise<GetListResponse<TData>> => {
-    if (resource !== "subjects") {
-      return {
-        data: [] as TData[],
-        total: 0,
-      };
+      filters?.forEach((filter)=>{
+        const field ='field' in filter? filter.field:'';
+        const value =String(filter.value);
+
+        if(resource==='subjects'){
+          if(field==='department') params.department=value;
+          if(field === 'name'|| field==='code')params.search=value;
+        }
+      })
+      return params;
+
+    },
+
+    mapResponse:async (response)=>{
+      const payload : ListResponse=await response.json();
+      return payload.data ??[];
+    },
+
+    getTotalCount:async (response)=>{
+      const payload:ListResponse=await response.json();
+      return payload.pagination?.total?? payload.data?.length??0;
     }
 
-    return {
-      data: mockSubjects as TData[],
-      total: mockSubjects.length,
-    };
-  },
-  getOne: async () => {
-    throw new Error("this function is not present in moock");
-  },
-  create: async () => {
-    throw new Error("this function is not present in moock");
-  },
-  update: async () => {
-    throw new Error("this function is not present in moock");
-  },
-  deleteOne: async () => {
-    throw new Error("this function is not present in moock");
-  },
-
-  getApiUrl: () => "",
-};
+  }
+}
+export const  {dataProvider}=createDataProvider(BACKEND_BASE_URL,options);
 

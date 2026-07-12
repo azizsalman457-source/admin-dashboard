@@ -1,0 +1,1 @@
+ALTER TABLE "classes" ADD COLUMN "section" varchar(255) NOT NULL;

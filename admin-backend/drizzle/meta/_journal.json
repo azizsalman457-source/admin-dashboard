@@ -5,8 +5,29 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1783323352071,
-      "tag": "0000_sour_wild_pack",
+      "when": 1783783760408,
+      "tag": "0000_small_northstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1783787732513,
+      "tag": "0001_optimal_sugar_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1783788423970,
+      "tag": "0002_lame_dazzler",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1783791270876,
+      "tag": "0003_demonic_robbie_robertson",
       "breakpoints": true
     }
   ]

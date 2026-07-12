@@ -1,6 +1,9 @@
 import express from 'express';
 import SubjectRouter from './routes/subjects';
 import cors from "cors";
+import {ClassRouter} from './routes/Classes';
+import { teacherRouter } from './routes/teacher';
+import { DepartmentRouter } from "./routes/departments";
 const app = express();
 const PORT=8000;
 if(!process.env.FRONTEND_URL)
@@ -15,7 +18,11 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use('/api/subjects',SubjectRouter)
+app.use('/api/subjects',SubjectRouter);
+app.use('/api/classes',ClassRouter);
+app.use('/api/teachers',teacherRouter);
+
+app.use("/api/departments", DepartmentRouter);
 
 app.get('/',(req,res)=>{
     res.send('hello, welcome to classroom api');

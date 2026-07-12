@@ -1,6 +1,6 @@
 {
-  "id": "b21816f0-f345-4d84-b79a-539e5f5f71b8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "745b2d1f-d7e0-4797-b092-363fac0425c4",
+  "prevId": "b21816f0-f345-4d84-b79a-539e5f5f71b8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -188,9 +188,9 @@
             "cycle": false
           }
         },
-        "department_id": {
-          "name": "department_id",
-          "type": "integer",
+        "department_code": {
+          "name": "department_code",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -229,15 +229,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "subjects_department_id_departments_id_fk": {
-          "name": "subjects_department_id_departments_id_fk",
+        "subjects_department_code_departments_code_fk": {
+          "name": "subjects_department_code_departments_code_fk",
           "tableFrom": "subjects",
           "tableTo": "departments",
           "columnsFrom": [
-            "department_id"
+            "department_code"
           ],
           "columnsTo": [
-            "id"
+            "code"
           ],
           "onDelete": "restrict",
           "onUpdate": "no action"

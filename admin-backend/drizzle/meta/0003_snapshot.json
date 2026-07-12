@@ -1,6 +1,6 @@
 {
-  "id": "b21816f0-f345-4d84-b79a-539e5f5f71b8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "9f35d9d0-7d99-497c-b900-28bfe6dd124c",
+  "prevId": "94ecddf0-ae37-49a2-af5e-c8fb0abb6c69",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -27,6 +27,12 @@
         },
         "name": {
           "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "section": {
+          "name": "section",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -162,7 +168,15 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "departments_code_unique": {
+          "name": "departments_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -188,9 +202,9 @@
             "cycle": false
           }
         },
-        "department_id": {
-          "name": "department_id",
-          "type": "integer",
+        "department_code": {
+          "name": "department_code",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
         },
@@ -229,15 +243,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "subjects_department_id_departments_id_fk": {
-          "name": "subjects_department_id_departments_id_fk",
+        "subjects_department_code_departments_code_fk": {
+          "name": "subjects_department_code_departments_code_fk",
           "tableFrom": "subjects",
           "tableTo": "departments",
           "columnsFrom": [
-            "department_id"
+            "department_code"
           ],
           "columnsTo": [
-            "id"
+            "code"
           ],
           "onDelete": "restrict",
           "onUpdate": "no action"

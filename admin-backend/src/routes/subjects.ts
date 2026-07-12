@@ -5,7 +5,7 @@ import { db } from "../db";
 
 
 
-const SubjectRouter =express.Router();
+export const SubjectRouter =express.Router();
 //get all subjects with optional search filtering and pagination
 SubjectRouter.get("/",async(req,res)=>{
    try {
@@ -38,20 +38,25 @@ SubjectRouter.get("/",async(req,res)=>{
 
     const countResult = await db.select({count:sql<number>`count(*)`})
     .from(subjects)
-    .leftJoin(departments,eq(subjects.departmentId,departments.id))
+    .leftJoin(departments,eq(subjects.departmentCode,departments.code))
     .where(whereClause);
 
     const totalCount = countResult[0]?.count?? 0;
 
-    const subjectsList=await db.select({
+    const subjectsList=await db.select
+    ({
         ...getTableColumns(subjects),
         department:{...getTableColumns(departments)}
-    }).from(subjects).leftJoin(departments,eq(subjects.departmentId,departments.id))
+    })
+    .from(subjects)//main table
+    .leftJoin(departments,eq(subjects.departmentCode,departments.code))//one leftjoin per relation
     .where(whereClause)
     .orderBy(desc(subjects.createdAt))
     .limit(limitPage)
-    .offset(offset)
-    res.status(200).json({
+    .offset(offset);
+
+    res.status(200).json
+    ({
         data:subjectsList,
         pagination:{
             page:currentPage,
@@ -66,5 +71,31 @@ SubjectRouter.get("/",async(req,res)=>{
     res.status(500).json({error:'failed to get subjects'})
    }
 })
+SubjectRouter.post('/',async (req,res)=>{
+    try {
+        const{
+            name,
+            departmentCode,
+            code,
+            description,
+        }=req.body;
+        if(!name||!departmentCode)
+        {
+            return res.status(400).json({error:"name and departmentId are required"});
+        }
 
-export default SubjectRouter
+      const [newSubject]=await db.insert(subjects)
+        .values({
+            name,
+            departmentCode,
+            code,
+            description,
+        }).returning();
+        res.status(201).json({data:newSubject});
+    } catch (e) {
+        console.error(`POST/subject error:${e} `);
+        res.status(500).json({error:"failed to create subject"});
+    }
+});
+
+export default SubjectRouter;

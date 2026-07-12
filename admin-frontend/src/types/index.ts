@@ -3,7 +3,7 @@ export type Subject = {
   name: string;
   code: string;
   description: string;
-  department: string;
+  department: {id:number,name:string};
   createdAt?: string;
 };
 
@@ -110,6 +110,15 @@ export type ClassDetails = {
   department?: Department;
   schedules: Schedule[];
   inviteCode?: string;
+};
+export type Class = {
+  id: number;
+  name: string;
+  section: string;
+  subject: { id: number; name: string };
+  teacher: { id: number; name: string };
+  capacity: number;
+  createdAt?: string;
 };
 
 export type SignUpPayload = {

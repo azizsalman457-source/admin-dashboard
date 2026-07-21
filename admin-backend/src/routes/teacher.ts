@@ -44,3 +44,24 @@ teacherRouter.get("/", async (req, res) => {
     res.status(500).json({ error: "failed to get teachers" });
   }
 });
+teacherRouter.post('/',async(req,res)=>{
+  try {
+    const{
+      name,
+
+    }=req.body;
+    if(!name)
+    {
+      return res.status(400).json({error:'name is required'});
+    }
+    const[newTeacher]=await db.insert(teachers)
+    .values({
+      name,
+    }).returning();
+    res.status(200).json({data:newTeacher});
+  } catch (err) {
+    console.error(`post/teacher error:`,err);
+    res.status(500).json({error:"failed to create teacher"})
+    
+  }
+})

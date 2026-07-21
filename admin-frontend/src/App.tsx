@@ -14,6 +14,7 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 import Dashboard from "@/pages/Dashboard";
 import {BookOpen,
+        GraduationCap,
         Home,
         List} from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
@@ -56,7 +57,7 @@ function App() {
                   name:"classes",
                   list:"/classes",
                   create:"/classes/create",
-                  meta:{label:"Classes",icon:<List/>}
+                  meta:{label:"Classes",icon:<GraduationCap/>}
                 }
                 
               ]}

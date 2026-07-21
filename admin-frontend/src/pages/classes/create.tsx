@@ -19,6 +19,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 // import {
@@ -32,6 +33,7 @@ import { classSchema } from '@/lib/schema'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import UploadWidget from '@/components/upload-widget'
+
 const formSchema = z.object({
   title: z
     .string()
@@ -44,17 +46,15 @@ const formSchema = z.object({
 })
 
 
-export default function ClassCreate() {
+export default function ClassCreate() 
+{
+
   const form = useForm({
     resolver: zodResolver(classSchema),
     refineCoreProps:{
       resource:'classes',
       action:'create'
     },
-
-    defaultValues:{
-      status:'active',
-    }
     },
   )
   const { options: subjectOptions } = useSelect({
@@ -82,6 +82,23 @@ const back = useBack();
   console.log("Submitting with values:", values);
   return onFinish(values);
 };
+
+const bannerPublicId =form.watch('bannerCldPubId');
+const setBannerImage =(file,field)=>{
+  if(file){
+    field.onChange(file.url);
+    form.setValue('bannerCldPubId',file.publicId,{
+      shouldValidate:true,
+      shouldDirty:true,
+    })
+  }else{
+    field.onChange('');
+    form.setValue('bannerCldPubId','',{
+      shouldValidate:true,
+      shouldDirty:true,
+    })
+  }
+}
   return (
     <CreateView className='class-view'>
       <Breadcrumb/>
@@ -104,14 +121,26 @@ const back = useBack();
             <Form {...form}>
               <form onSubmit={handleSubmit(handleFormSubmit)} 
                     className="space-y-6">
-                      <div className='space-y-3'>
-                        <Label>
-                          Banner Image
-                          <span className='text-orange-600'>*</span>
-
-                        </Label>
-                        <UploadWidget></UploadWidget>
-                      </div>
+                     <FormField
+                      control={control}
+                      name="bannerUrl"
+                      render={({field})=>(
+                        <FormItem>
+                          <FormLabel>Banner Image 
+                            <span className='text-orange-600'>*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <UploadWidget
+                             value={field.value ?{url:field.value,publicId:bannerPublicId??''}:null}
+                             onChange={(file:any,field:any)=>setBannerImage(file,field)}/>
+                             </FormControl>
+                             <FormMessage></FormMessage>
+                             {errors.bannerCldPubId&& !errors.bannerUrl&&(
+                              <p className='text-destructive text-sm'>{errors.bannerCldPubId.message?.toString()}</p>
+                             )}
+                        </FormItem>
+                      )}
+                      />
                 <FormField
                   control={control}
                   name="name"
@@ -259,4 +288,4 @@ const back = useBack();
 
     </CreateView>
     )
-    }
+}
